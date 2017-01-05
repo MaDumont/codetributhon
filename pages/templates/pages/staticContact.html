@@ -1,0 +1,82 @@
+{% extends "landing_base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load staticfiles %}
+{% block title %}Contact{% endblock %}
+{% block pagedesc %}
+    Page de contact pour C0deTribuThon
+{% endblock %}
+{% block pagekey %}
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="body-general">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="page-header">
+                        <h1>{% trans "À propos" %}</h1>
+                    </div>
+
+                </div>
+                <div>
+
+                    <body>
+                        <canvas id="canvas" width="1000" height="1000"></canvas>
+
+                        <script type="text/javascript" src="{% static 'js/libs/fabric1.js' %}"></script>
+                        <script>
+                            var canvas = new fabric.StaticCanvas('canvas');
+
+                            var tblPosiLeft = [100,100,100,100,150,200,250,275];
+                            var tblPosiTop = [100,200,300,400,100,100,100,100];
+                            var tblCircle = [];
+                            for (i = 0; i < tblPosiTop.length; ++i){
+                                tblCircle.push(new fabric.Circle({
+                                    left:tblPosiLeft[i], top:tblPosiTop[i],  radius:5, stroke:'black', strokeWidth:10, fill:'yes'
+                                }));
+
+                                canvas.add(tblCircle[i]);
+                            }
+
+
+                            var cursorX;
+                            var cursorY;
+                            document.onmousemove = function(e){
+                                    cursorX = e.pageX - 139;
+                                    cursorY = e.pageY - 189;
+                            }
+                            function checkCursor(){
+                                    console.log("Cursor at: " + cursorX + ", " + cursorY);
+                                    console.log(tblCircle[2].getLeft() + ", " + tblCircle[2].getTop());
+                            }
+                            setInterval(getPositionIni, 100);
+                            function getPositionIni(){
+
+                                for(i = 0; i < tblCircle.length; ++i){
+
+                                    actuX = tblCircle[i].getLeft();
+                                    actuY = tblCircle[i].getTop();
+                                    destiX = tblPosiLeft[i];
+                                    destiY = tblPosiTop[i];
+
+                                    tblCircle[i].setLeft((destiX - actuX)/20 + actuX);
+                                    tblCircle[i].setTop((destiY - actuY)/20 + actuY);
+
+
+                                }
+
+
+                            }
+
+
+                        </script>
+                    </body>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

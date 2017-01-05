@@ -1,6 +1,7 @@
 {% extends "landing_base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load staticfiles %}
 {% block title %}Contact{% endblock %}
 {% block pagedesc %}
     Page de contact pour C0deTribuThon
@@ -17,6 +18,111 @@
                     <div class="page-header">
                         <h1>{% trans "À propos" %}</h1>
                     </div>
+
+                </div>
+                <div>
+
+                    <body onload="init()">
+                        <canvas id="canvas" width="1000" height="500"> </canvas>
+                        <script type="text/javascript" src="{% static 'js/libs/jquery-2.2.2.min.js' %}"></script>
+                        <script>
+
+                            var canvas, context, cursor= {x:0,y:0},
+                                /*tblPosiInit = [{x:100, y:100},{x:100, y:200},{x:100, y:300},{x:100, y:400},
+                                            {x:150, y:100},{x:200, y:10},{x:250, y:100},{x:275, y:100}];
+                                tblPosiActu = [{x:100, y:100},{x:100, y:200},{x:100, y:300},{x:100, y:400},
+                                            {x:150, y:100},{x:200, y:10},{x:250, y:100},{x:275, y:100}];*/
+
+                                tblPosiInit = [], tblPosiActu = [];
+
+                            var X = 30;
+                            var Y = 0;
+                            for (i = 0; i<45;++i){
+
+                                X = 100+75*(i%9)+30*Math.floor(i%9/3);
+                                Y = 100+75*Math.floor(i/9);
+                                tblPosiInit[i] = {x:X, y:Y};
+                                tblPosiActu[i] = {x:X, y:Y};
+                            }
+
+                            posiNbBlackSpace = [0,2,3,4,5,6,8,9,11,12,14,15,17,18,19,20,21,23,24,25,26,30,31,32,35,38,40,44];
+
+
+                            console.log(tblPosiInit);
+
+                            document.onmousemove = function(e){
+                                    cursor.x = e.pageX - 127;
+                                    cursor.y = e.pageY - 297;
+                            }
+                            function init()
+                            {
+                                canvas = document.getElementById('canvas');
+                                if(canvas.getContext)
+                                    context = canvas.getContext('2d');
+                                else return;
+
+                                setInterval(draw, 1000);
+                                setInterval(changePosition, 1000/60);
+                                setInterval(print(),5000);
+                            }
+
+                            function draw()
+                            {
+                                context.clearRect(0, 0, canvas.width, canvas.height);
+                                context.beginPath();
+                                for( i = 0; i < tblPosiActu.length; ++i){
+
+                                    if($.inArray(i,posiNbBlackSpace)){
+                                        console.log("sdafasf");
+                                        context.fillStyle = "grey";
+                                    }
+                                    else{
+                                        console.log("voici");
+                                        context.fillStyle = "white";
+                                    }
+                                    context.arc(tblPosiActu[i].x, tblPosiActu[i].y, 30, 0, Math.PI * 2, true);
+                                    context.fill();
+                                    context.closePath();
+                                    tblPosiActu[i].x = (tblPosiInit[i].x - tblPosiActu[i].x)/20 + tblPosiActu[i].x ;
+                                    tblPosiActu[i].y = (tblPosiInit[i].y - tblPosiActu[i].y)/20 + tblPosiActu[i].y ;
+
+
+                                }
+
+                            }
+
+                            function changePosition(){
+
+
+                                //find real position mouse
+
+                                for( i = 0; i < tblPosiActu.length; ++i){
+
+
+                                    distX = parseInt(cursor.x - tblPosiActu[i].x);
+                                    distY = cursor.y - tblPosiActu[i].y;
+                                    //console.log(Math.pow(distX));
+                                    distTotal = Math.sqrt(Math.pow(distX) + Math.pow(distY));
+                                    if (distTotal < 100){
+                                        tblPosiActu[i].x += 5/(distX);
+                                        tblPosiActu[i].y += 5/(distY);
+                                    }
+
+
+                                }
+
+                            }
+
+                            function print(){
+
+                                    //console.log("Cursor at: " + cursor.x + ", " + cursor.y);
+
+                                    //console.log("distT: " + distTotal + " distX: " + distX + " distY: " + distY);
+
+                            }
+
+                        </script>
+                    </body>
 
                 </div>
             </div>

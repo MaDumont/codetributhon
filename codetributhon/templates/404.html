@@ -1,0 +1,102 @@
+{% extends "landing_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %}{{ block.super }}- {{ events.title }}{% endblock %}
+
+{% block extrajs %}
+    <!--script type="text/javascript" src="{% static 'js/404.js' %}"></script-->
+    <script>
+
+        function afficherForm(){
+            // create a wrapper around native canvas element (with id="c")
+            var canvas = new fabric.Canvas('canvas');
+
+            // make a hexagon
+            var points=regularPolygonPoints(6,30);
+
+            var myPoly = new fabric.Polygon(
+                    points,
+                    {stroke: 'red', left: 10, top: 10, strokeWidth: 2, strokeLineJoin: 'bevil'},
+                    false);
+            canvas.add(myPoly);
+
+            // make a star
+            var points=starPolygonPoints(5,50,25);
+
+            var myStar = new fabric.Polygon(points, {
+                  stroke: 'red',
+                    left: 100,
+                      top: 10,
+                        strokeWidth: 2,
+                          strokeLineJoin: 'bevil'
+            },false);
+            canvas.add(myStar);
+
+
+            function regularPolygonPoints(sideCount,radius){
+                var sweep=Math.PI*2/sideCount;
+                var cx=radius;
+                var cy=radius;
+                var points=[];
+                for(var i=0;i<sideCount;i++){
+                    var x=cx+radius*Math.cos(i*sweep);
+                    var y=cy+radius*Math.sin(i*sweep);
+                    points.push({x:x,y:y});
+                }
+                return(points);
+            }
+
+
+            function starPolygonPoints(spikeCount, outerRadius, innerRadius) {
+                var rot = Math.PI / 2 * 3;
+                var cx = outerRadius;
+                var cy = outerRadius;
+                var sweep = Math.PI / spikeCount;
+                var points = [];
+                var angle = 0;
+
+                for (var i = 0; i < spikeCount; i++) {
+                    var x = cx + Math.cos(angle) * outerRadius;
+                    var y = cy + Math.sin(angle) * outerRadius;
+                    points.push({x: x, y: y});
+                    angle += sweep;
+
+                    x = cx + Math.cos(angle) * innerRadius;
+                    y = cy + Math.sin(angle) * innerRadius;
+                    points.push({x: x, y: y});
+                    angle += sweep
+                }
+                return (points);
+            }
+
+
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="body-general">
+            <div class="page-header">
+
+                <h1> This page does not existe.</h1>
+
+	        </div>
+            <div>
+
+
+                <p> asdfbfasdh </p>
+
+                <body onload="afficherForm()">
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
